@@ -8,7 +8,7 @@ from settings import (
     RANDOM_WALLET,
     SLEEP_TO,
     SLEEP_FROM,
-    REMOVE_WALLET,
+     REMOVE_WALLET,
 )
 from modules_settings import *
 from utils.helpers import remove_wallet
