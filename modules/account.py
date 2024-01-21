@@ -31,13 +31,17 @@ class Account:
         self.account = EthereumAccount.from_key(private_key)
         self.address = self.account.address
 
-    async def get_tx_data(self, value: int = 0):
+    async def get_tx_data(self, value: int = 0, gas_price: bool = True):
         tx = {
             "chainId": await self.w3.eth.chain_id,
             "from": self.address,
             "value": value,
             "nonce": await self.w3.eth.get_transaction_count(self.address),
         }
+
+        if gas_price:
+            tx.update({"gasPrice": await self.w3.eth.gas_price})
+
         return tx
 
     def get_contract(self, contract_address: str, abi=None) -> Union[Type[Contract], Contract]:
@@ -147,20 +151,26 @@ class Account:
                 await asyncio.sleep(1)
 
     async def sign(self, transaction) -> Any:
-        max_fee_per_gas = await self.w3.eth.gas_price
-        max_priority_fee_per_gas = self.w3.to_wei(GAS_PRIORITY_FEE[self.chain], "gwei")
-        gas = int(await self.w3.eth.estimate_gas(transaction) * GAS_MULTIPLIER)
-        transaction.update(
-            {
-                "maxPriorityFeePerGas": max_priority_fee_per_gas,
-                "maxFeePerGas": max_fee_per_gas,
-                "gas": gas
-            }
-        )
+        if transaction.get("gasPrice", None) is None:
+            max_priority_fee_per_gas = self.w3.to_wei(MAX_PRIORITY_FEE["ethereum"], "gwei")
+            max_fee_per_gas = await self.w3.eth.gas_price
+
+            transaction.update(
+                {
+                    "maxPriorityFeePerGas": max_priority_fee_per_gas,
+                    "maxFeePerGas": max_fee_per_gas,
+                }
+            )
+
+        gas = await self.w3.eth.estimate_gas(transaction)
+        gas = int(gas * GAS_MULTIPLIER)
+
+        transaction.update({"gas": gas})
 
         signed_txn = self.w3.eth.account.sign_transaction(transaction, self.private_key)
 
         return signed_txn
+
 
     async def send_raw_transaction(self, signed_txn) -> HexBytes:
         txn_hash = await self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
