@@ -6,11 +6,12 @@ from config import NFTS2ME_ABI
 from utils.gas_checker import check_gas
 from utils.helpers import retry
 from .account import Account
+from settings import CHAIN
 
 
 class Minter(Account):
     def __init__(self, account_id: int, private_key: str) -> None:
-        super().__init__(account_id=account_id, private_key=private_key, chain="base")
+        super().__init__(account_id=account_id, private_key=private_key, chain=CHAIN)
 
     @retry
     @check_gas
