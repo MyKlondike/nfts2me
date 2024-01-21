@@ -5,9 +5,8 @@ from web3 import AsyncWeb3
 from web3.middleware import async_geth_poa_middleware
 
 from config import RPC
-from settings import CHECK_GWEI, MAX_GWEI
+from settings import CHECK_GWEI, MAX_GWEI, CHAIN
 from loguru import logger
-
 
 async def get_gas():
     try:
@@ -27,7 +26,7 @@ async def get_gas():
 async def get_base_gas():
     try:
         w3 = AsyncWeb3(
-            AsyncWeb3.AsyncHTTPProvider(random.choice(RPC["base"]["rpc"])),
+            AsyncWeb3.AsyncHTTPProvider(random.choice(RPC[CHAIN]["rpc"])),
             middlewares=[async_geth_poa_middleware],
         )
 
@@ -44,8 +43,8 @@ async def wait_gas():
         gas = await get_gas()
         base_gase = await get_base_gas()
 
-        if gas > MAX_GWEI or base_gase > 0.01:
-            logger.info(f'Current GWEI: {gas} > {MAX_GWEI}')
+        if gas > MAX_GWEI or base_gase > 0.5:
+            logger.info(f'Current GWEI: {gas} > {MAX_GWEI} or {CHAIN} gase > 0.5')
             await asyncio.sleep(60)
         else:
             logger.success(f"GWEI is normal | current: {gas} < {MAX_GWEI}")
