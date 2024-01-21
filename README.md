@@ -1,5 +1,5 @@
-# Gift_2023
-Free Mint Gift NFT: https://ny2024.nfts2.me
+# Mint NFT on NFTS2ME
+Mint NFT on: https://ny2024.nfts2.me
 
 ## Оглавление
 1. [Требования](#требования)
