@@ -5,7 +5,7 @@ RANDOM_WALLET = True  # True/False
 REMOVE_WALLET = True  # True/False
 
 SLEEP_FROM = 100  # Second
-SLEEP_TO = 300  # Second
+SLEEP_TO = 10000  # Second
 
 # NFTcontracts - list NFT contract addresses
 
@@ -17,7 +17,7 @@ NFTcontracts = ["0x60F5731b303B3C738f1a615002fD45f15aFd9A15", "0x874ECca99028411
 
 # GWEI CONTROL MODE
 CHECK_GWEI = True  # True/False
-MAX_GWEI = 22
+MAX_GWEI = 40
 
 GAS_PRIORITY_FEE = {
     "ethereum": 0.05,
