@@ -12,6 +12,9 @@ with open("accounts.txt", "r") as file:
 with open("data/abi/nft2me/abi.json", "r") as file:
     NFTS2ME_ABI = json.load(file)
 
+with open("data/abi/nft2me/zk_abi.json", "r") as file:
+    ZKNFTS2ME_ABI = json.load(file)
+
 
 BASE_TOKENS = {
     "ETH": "0x4200000000000000000000000000000000000006",
