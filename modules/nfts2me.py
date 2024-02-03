@@ -2,7 +2,7 @@ import random
 from typing import List
 
 from loguru import logger
-from config import NFTS2ME_ABI
+from config import NFTS2ME_ABI, ZKNFTS2ME_ABI
 from utils.gas_checker import check_gas
 from utils.helpers import retry
 from .account import Account
@@ -18,7 +18,10 @@ class Minter(Account):
     async def mint_nft(self, contracts: List):
         logger.info(f"[{self.account_id}][{self.address}] Mint NFT on NFTS2ME")
 
-        contract = self.get_contract(random.choice(contracts), NFTS2ME_ABI)
+        if CHAIN == "zksync":
+            contract = self.get_contract(random.choice(contracts), ZKNFTS2ME_ABI)
+        else:
+            contract = self.get_contract(random.choice(contracts), NFTS2ME_ABI)
 
         tx_data = await self.get_tx_data()
 
